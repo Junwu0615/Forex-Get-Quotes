@@ -1,0 +1,3 @@
+LINE,[Fill In Your LINE Token]
+FMP,[Fill In Your FMP Token]
+TELEGRAM,[Fill In Your Bot Token],[Fill In Your Chat Token]
