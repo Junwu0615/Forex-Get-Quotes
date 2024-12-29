@@ -10,7 +10,7 @@ from datetime import datetime
 from package.source import GetSource
 from package.token import TokenSettings
 from developers.package.norm_function import DATE_YMD_ONE, DATE_YMD_3TH
-from developers.model.TForexQuotes import TForexQuotesField, TableFormat
+from developers.model.TForexQuotes import TForexQuotesField, TForexQuotesFormat
 
 class BaseLogic:
     def __init__(self, obj):
@@ -79,7 +79,7 @@ class BaseLogic:
         else:
             raise ValueError('loader type error')
 
-        self.obj.save_datum(db_name=TForexQuotesField.TABLE_DB.value,
+        self.obj.save_datum(db_name=TForexQuotesField.DB_NAME.value,
                             table_name=TForexQuotesField.TABLE_NAME.value,
-                            table_format=TableFormat,
+                            table_format=TForexQuotesFormat,
                             save_data=datum)
