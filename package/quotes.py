@@ -24,16 +24,12 @@ class GetQuotes(Interface):
         # FIXME Todo Target
         target = ['xauusd', 'eurusd', 'usdjpy', 'btcusd', 'ethusd']
         self.create_folder('./datasets')
-        for item in target:
-            self.log_info(f'now todo: {item}')
-            self.create_folder(f'./datasets/{item.upper()}')
-            # self.base.save_in_json('ALL')
-            self.base.save_in_json(item, 'M1')
-            self.base.save_in_json(item, 'M5')
-            self.base.save_in_json(item, 'M15')
-            self.base.save_in_json(item, 'H1')
-            self.base.save_in_json(item, 'H4')
-            self.base.save_in_json(item, 'D1')
+        for symbol in target:
+            self.create_folder(f'./datasets/{symbol.upper()}')
+            for interval in ['M1', 'M5', 'M15', 'H1', 'H4', 'D1']:
+                self.log_warning(f'now todo: {symbol.upper()} [{interval}]')
+                self.base.save_data(symbol, interval)
+
         send_message = (f"Time: {str(datetime.now())[:10]} Save Data | "
                         f"Target List: {[i.upper() for i in target]}")
         self.base.send_message(key='telegram', content_text=send_message)
