@@ -30,7 +30,8 @@ class GetQuotes(Interface):
                 self.log_warning(f'now todo: {symbol.upper()} [{interval}]')
                 self.base.save_data(symbol, interval)
 
-        send_message = (f"Time: {str(datetime.now())[:10]} Save Data | "
+        report = 'telegram'
+        send_message = (f"[{report}] Time: {str(datetime.now())[:10]} Save Data to json and in Database | "
                         f"Target List: {[i.upper() for i in target]}")
-        self.base.send_message(key='telegram', content_text=send_message)
-        print(send_message)
+        self.base.send_message(report=report, content_text=send_message)
+        self.log_warning(send_message)

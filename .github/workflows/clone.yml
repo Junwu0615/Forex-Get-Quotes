@@ -7,11 +7,11 @@ on:
   
   # allows to manually run the job at any time
   workflow_dispatch:
-  
+
   # run on every push on the master branch
   push:
     branches:
-    - main
+    - master
 
 jobs:
   build:
@@ -56,7 +56,7 @@ jobs:
 
       - name: update Forex-Get-Quotes_clone.json
         run: |
-          curl https://raw.githubusercontent.com/Junwu0615/Forex-Get-Quotes/main/git_state/clone.py > clone.py
+          curl https://raw.githubusercontent.com/Junwu0615/Forex-Get-Quotes/master/git_state/clone.py > clone.py
           python3 clone.py
 
       - name: Update gist with latest count

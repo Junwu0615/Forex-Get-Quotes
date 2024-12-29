@@ -3,7 +3,7 @@
 @author: PC
 FIXME
     Update Time: 2024-12-29
-    -目的: 完成 [模擬交易程式] 可有使用之數據
+    -目的: 欲使 <模擬交易> 可有使用之數據
     -功能: 鎖定 XAUUSD ...等商品，並儲存 M1 M5 M15 H1 H4 D1 數個 Interval
     -訊息通知: Telegram / line: 2025-03-31 停止服務
     -待完成: 將該服務用 Docker 佈署並常駐運行
@@ -26,8 +26,8 @@ def check_schedule(do_time):
     every().sunday.at(do_time).do(todo_main)    # 星期天
                  
 if __name__ == "__main__":
-    todo_main()
-    # check_schedule(do_time='06:00:00') # 06:00:00
-    # while True:
-    #     run_pending()
-    #     time.sleep(1)
+    # todo_main()
+    check_schedule(do_time='06:00:00') # 06:00:00
+    while True:
+        run_pending()
+        time.sleep(1)

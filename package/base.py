@@ -16,8 +16,8 @@ class BaseLogic:
     def __init__(self, obj):
         self.obj = obj
 
-    def send_message(self, key: str='telegram', content_text: str='success'):
-        match key:
+    def send_message(self, report: str='telegram', content_text: str='success'):
+        match report:
             case 'line':
                 url = 'https://notify-api.line.me/api/notify'
                 headers = {'Authorization': 'Bearer ' + self.obj.line}
