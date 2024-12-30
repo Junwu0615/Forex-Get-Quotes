@@ -9,8 +9,8 @@ from datetime import datetime
 
 from package.source import GetSource
 from package.token import TokenSettings
-from developers.package.norm_function import DATE_YMD_ONE, DATE_YMD_3TH
-from developers.model.TForexQuotes import TForexQuotesField, TForexQuotesFormat
+from developer.package.norm_function import DATE_YMD_ONE, DATE_YMD_3TH
+from developer.model.TForexQuotes import TForexQuotesField, TForexQuotesFormat
 
 class BaseLogic:
     def __init__(self, obj):
@@ -44,7 +44,7 @@ class BaseLogic:
             for i in loader:
                 try:
                     timestamp = datetime.strptime(i['date'], DATE_YMD_3TH).timestamp()
-                    date = self.obj.trans_timestamp(timestamp, 43200)
+                    date = self.obj.trans_timestamp(timestamp, 46800)
                     key = f"{str(date)[:19]}_{symbol}_{interval}"
                     datum[key] = {
                         TForexQuotesField.CREATEDATETIME.value: date,
