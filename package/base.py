@@ -80,6 +80,5 @@ class BaseLogic:
             raise ValueError('loader type error')
 
         self.obj.save_datum(db_name=TForexQuotesField.DB_NAME.value,
-                            table_name=TForexQuotesField.TABLE_NAME.value,
                             table_format=TForexQuotesFormat,
                             save_data=datum)
