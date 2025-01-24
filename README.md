@@ -53,6 +53,25 @@ python Entry.py
 <br>
 
 ## *C.　Dockerization*
+
+### *Directory Structure Diagram*
+```commandline
+Forex-Get-Quotes/docker
+  ├── app
+  │   ├── package
+  │   │   ├── __init__.py
+  │   │   ├── base.py
+  │   │   ├── source.py
+  │   │   ├── token.py
+  │   │   └── token.txt
+  │   ├── Entry.py
+  │   └── requirements.txt
+  └── script
+      ├── .env
+      ├── docker-compose.yaml
+      └── Dockerfile
+```
+
 ### *STEP.1　進入腳本路徑*
 ```bash
 cd docker
