@@ -1,0 +1,35 @@
+version: '3.9'
+
+services:
+  task:
+    build:
+      context: ../../docker
+      dockerfile: ./Dockerfile
+    command: Forex-Get-Quotes
+    container_name: Forex-Get-Quotes
+    image: forex-get-quotes:latest
+    privileged: true
+    user: 1998:1998
+    restart: always
+    env_file:
+      - .env
+    security_opt:
+      - apparmor:unconfined
+      - seccomp:unconfined
+    tmpfs:
+      - /run
+      - /tmp
+    deploy:
+      mode: replicated
+      placement:
+        constraints:
+          - node.platform.arch == x86_64
+      replicas: 1
+    networks:
+      - open_network
+    volumes:
+      - ../../:/builds/rep
+
+networks:
+  open_network:
+    external: true
