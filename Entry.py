@@ -47,7 +47,7 @@ class Entry(Interface):
 
         target = ['xauusd']
         # target = ['xauusd', 'eurusd', 'usdjpy', 'btcusd', 'ethusd']
-        interval_list = ['M1']
+        interval_list = ['D1']
         # interval_list = ['M1', 'M5', 'M15', 'H1', 'H4', 'D1']
         try:
             for symbol in target:
@@ -56,8 +56,10 @@ class Entry(Interface):
                     self.logger.warning(f'[{MODULE_NAME}] Now: {symbol.upper()} [{interval}]')
                     self.base.save_data(base_path, symbol, interval)
 
-            message = (f'[{MODULE_NAME}] Time: {str(datetime.now())[:10]} Save Data In JSON & MS SQL | '
-                            f'Target List: {[i.upper() for i in target]}')
+            message = (f'[{MODULE_NAME} : save data in json and ms sql]\n'
+                       f'    - Time : {str(get_datetime_now())[:19]}\n'
+                       f'    - Target List : {[i.upper() for i in target]}')
+
             send_message(message,
                          logger=self.logger,
                          bot_token=os.environ.get('TELEGRAM_BOT_TOKEN'),
@@ -80,5 +82,6 @@ if __name__ == "__main__":
     logger.info(logger.title_log(f'[{__name__}] 主程式啟動'))
 
     do_time = os.environ.get('SCHEDULE_SETTINGS')
-    do_time = ['MTWTFss=06:00:00', 'MTWTFss=18:00:00'] if do_time is None else do_time.split(',')
+    do_time = ['MTWTFss=06:00:00', 'MTWTFss=18:00:00'] \
+        if do_time is None else do_time.split(',')
     entry = Entry(do_time, logger)
