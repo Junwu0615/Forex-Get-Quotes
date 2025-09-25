@@ -2,6 +2,8 @@
 from developer.utils.normal import *
 from developer.modules.models.TForexQuotes import TForexQuotesField, TForexQuotesFormat
 
+MODULE_NAME = __name__.upper()
+
 class UtilsLogic:
     def __init__(self, obj, logger):
         self.obj = obj
