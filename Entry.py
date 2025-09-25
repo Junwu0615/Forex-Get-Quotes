@@ -57,7 +57,7 @@ class Entry(Interface):
                     self.base.save_data(base_path, symbol, interval)
 
             message = (f'[{MODULE_NAME} : save data in json and ms sql]\n'
-                       f'    - Time : {str(get_datetime_now())[:19]}\n'
+                       f'    - Time : {str(get_now(hours=8, tzinfo=TZ_UTC_8))[:19]}\n'
                        f'    - Target List : {[i.upper() for i in target]}')
 
             send_message(message,

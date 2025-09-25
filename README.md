@@ -55,22 +55,22 @@ python Entry.py
 ```commandline
 Forex-Get-Quotes/docker
   ├── app
-  │   ├── package
+  │   ├── lib
   │   │   ├── __init__.py
-  │   │   ├── base.py
-  │   │   ├── source.py
-  │   │   ├── token.py
-  │   │   └── token.txt
+  │   │   └── utils.py
+  │   │
   │   ├── Entry.py
   │   └── requirements.txt
+  │
   └── script
       ├── .env
       ├── docker-compose.yaml
       └── Dockerfile
 ```
 
-### *STEP.1　進入腳本路徑*
+### *STEP.1　創建檔案夾 & 進入腳本路徑*
 ```bash
+md datasets;
 cd docker
 ```
 

@@ -8,14 +8,14 @@ services:
     command: Forex-Get-Quotes
     container_name: Forex-Get-Quotes
     image: forex-get-quotes:latest
-    privileged: true
+#    privileged: true
     user: 1998:1998
     restart: always
     env_file:
       - .env
-    security_opt:
-      - apparmor:unconfined
-      - seccomp:unconfined
+#    security_opt:
+#      - apparmor:unconfined
+#      - seccomp:unconfined
     tmpfs:
       - /run
       - /tmp

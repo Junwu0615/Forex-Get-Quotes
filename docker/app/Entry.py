@@ -45,8 +45,10 @@ class Entry(Interface):
         base_path = os.environ.get('SAVE_PATH')
         os.makedirs(base_path, exist_ok=True)
 
-        target = ['xauusd', 'eurusd', 'usdjpy', 'btcusd', 'ethusd']
-        interval_list = ['M1', 'M5', 'M15', 'H1', 'H4', 'D1']
+        target = ['xauusd']
+        # target = ['xauusd', 'eurusd', 'usdjpy', 'btcusd', 'ethusd']
+        interval_list = ['D1']
+        # interval_list = ['M1', 'M5', 'M15', 'H1', 'H4', 'D1']
         try:
             for symbol in target:
                 os.makedirs(f'{base_path}/{symbol.upper()}', exist_ok=True)
@@ -55,7 +57,7 @@ class Entry(Interface):
                     self.base.save_data(base_path, symbol, interval)
 
             message = (f'[{MODULE_NAME} : save data in json and ms sql]\n'
-                       f'    - Time : {str(get_datetime_now())[:19]}\n'
+                       f'    - Time : {str(get_now(hours=8, tzinfo=TZ_UTC_8))[:19]}\n'
                        f'    - Target List : {[i.upper() for i in target]}')
 
             send_message(message,
