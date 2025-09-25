@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM python:3.12.3-bookworm
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONPATH="/venv/dependencies"
@@ -7,74 +7,57 @@ ARG USER=pc
 ARG UID=1998
 ARG GID=1998
 
-# * By combining RUN together, the image size can be reduced
-# - Install necessary packages
-# - Configure Microsoft SQL Server repository & Update package lists and install msodbcsql driver
-# - Create user and group (not recommended with elevated privileges)
-# - Create directories
+# Install necessary packages and configure MS ODBC Driver
 RUN apt-get update \
-    && apt-get install -y  \
-    build-essential  \
-    git  \
-    unixodbc unixodbc-dev  \
-    odbcinst1debian2  \
-    odbcinst  \
-    curl  \
-    gnupg2  \
-    apt-utils  \
-    libglib2.0-0 \
-    libnss3 \
+    && apt-get install -y --no-install-recommends \
+    build-essential \
+    git \
+    unixodbc unixodbc-dev \
+    odbcinst1debian2 \
+    odbcinst \
+    curl \
+    gnupg2 \
+    apt-utils \
     libgconf-2-4 \
     libfontconfig1 \
+    libglib2.0-0 \
+    libnss3 \
     telnet \
     \
-    && curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
-    && curl https://packages.microsoft.com/config/debian/11/prod.list > /etc/apt/sources.list.d/mssql-release.list \
+    # Add Microsoft GPG key (modern approach for Debian 12)
+    && curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /usr/share/keyrings/microsoft-prod.gpg \
+    && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft-prod.gpg] https://packages.microsoft.com/debian/12/prod bookworm main" > /etc/apt/sources.list.d/mssql-release.list \
+    \
     && apt-get update \
     && ACCEPT_EULA=Y apt-get install -y msodbcsql17 \
     \
-    && groupadd -g $GID $USER && useradd -s /bin/bash -u $UID -g $GID -m $USER \
+    # Create user, group and directories
+    && groupadd -g $GID $USER \
+    && useradd -s /bin/bash -u $UID -g $GID -m $USER \
+    && mkdir -p /builds/app \
+    && chown -R $UID.$GID /builds \
     \
-    && mkdir -p /etc/sudoers.d/ \
-    && echo "$USER ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/$USER \
-    && chmod 0440 /etc/sudoers.d/$USER \
-	&& mkdir -p /builds/app
+    # Clean apt cache
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy application code
+# Copy application code and install dependencies
 COPY app /builds/app/
-
-# Set ownership and install dependencies
-# Clean up temporary files and packages
-# Install dependencies into virtual environment
-RUN chown -R $UID.$GID /builds \
-    && pip install --upgrade -r /builds/app/requirements.txt \
-    && rm -f /builds/app/*.txt \
-    \
-    && find /usr/local -depth \
-		\( \
-			\( -type d -a \( -name tests -o -name idle_test \) \) \
-			-o \( -type f -a \( -name '*.pyc' -o -name '*.pyo' -o -name '*.a' \) \) \
-		\) -exec rm -rf '{}' + \
-	\
-    && find / -type d -name __pycache__ -prune -exec rm -rf {} \; \
-    && rm -rf ~/.cache/pip \
-    && apt-get remove --purge -yq \gpg \
-    && apt-get remove --purge --auto-remove systemd --allow-remove-essential -y \
-    && apt-get clean -y \
-    && rm -rf /tmp/* /var/tmp/* /var/lib/apt/archive/* /var/lib/apt/lists/* \
-    \
-    && pip install --upgrade --target=/venv/dependencies \
-    tqdm==4.64.1 \
-    pyodbc==5.2.0 \
-    pandas==2.2.3 \
-    colorlog==6.9.0 \
-    schedule==1.2.2 \
-    requests==2.31.0 \
-    sqlalchemy==2.0.36 \
-    setuptools==75.1.0 \
-    python-dateutil==2.9.0.post0
-
-# Set working directory and entrypoint
 USER $USER
 WORKDIR /builds/app
+
+# Use a single pip install command to avoid redundancy
+# Use --no-cache-dir to prevent caching
+RUN pip install --no-cache-dir --upgrade -r /builds/app/requirements.txt
+
+# Final cleanup
+RUN find /usr/local -depth \
+       \( \
+          \( -type d -a \( -name tests -o -name idle_test \) \) \
+          -o \( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \
+       \) -exec rm -rf '{}' + \
+    \
+    && find / -type d -name __pycache__ -prune -exec rm -rf {} \; \
+    && rm -rf /root/.cache /home/$USER/.cache
+
 ENTRYPOINT ["python", "Entry.py"]
