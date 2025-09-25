@@ -1,63 +1,55 @@
-FROM python:3.12.3-bookworm
+# 基於 Debian 輕量級映像檔
+FROM python:3.12-bookworm
 
+
+# 設定環境變數
 ENV DEBIAN_FRONTEND=noninteractive
-ENV PYTHONPATH="/venv/dependencies"
+ENV PYTHONUNBUFFERED=1
 
+
+# 設定使用者和群組
 ARG USER=pc
 ARG UID=1998
 ARG GID=1998
 
-# Install necessary packages and configure MS ODBC Driver
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
+
+# 安裝必要的套件並配置 MS ODBC 驅動程式
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
     build-essential \
-    git \
-    unixodbc unixodbc-dev \
-    odbcinst1debian2 \
-    odbcinst \
+    unixodbc \
+    unixodbc-dev \
     curl \
-    gnupg2 \
-    apt-utils \
-    libgconf-2-4 \
-    libfontconfig1 \
-    libglib2.0-0 \
-    libnss3 \
+    gnupg \
+    apt-transport-https \
     telnet \
     \
-    # Add Microsoft GPG key (modern approach for Debian 12)
+    # 加入 Microsoft apt 密鑰
     && curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /usr/share/keyrings/microsoft-prod.gpg \
     && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft-prod.gpg] https://packages.microsoft.com/debian/12/prod bookworm main" > /etc/apt/sources.list.d/mssql-release.list \
     \
     && apt-get update \
-    && ACCEPT_EULA=Y apt-get install -y msodbcsql17 \
+    && ACCEPT_EULA=Y apt-get install -y msodbcsql18 \
     \
-    # Create user, group and directories
+    # 創建使用者和群組
     && groupadd -g $GID $USER \
     && useradd -s /bin/bash -u $UID -g $GID -m $USER \
     && mkdir -p /builds/app \
-    && chown -R $UID.$GID /builds \
+    && chown -R $UID:$GID /builds \
     \
-    # Clean apt cache
+    # 清理 apt 快取以減少映像檔大小
+    && apt-get autoremove -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy application code and install dependencies
+
 COPY app /builds/app/
 USER $USER
 WORKDIR /builds/app
 
-# Use a single pip install command to avoid redundancy
-# Use --no-cache-dir to prevent caching
-RUN pip install --no-cache-dir --upgrade -r /builds/app/requirements.txt
 
-# Final cleanup
-RUN find /usr/local -depth \
-       \( \
-          \( -type d -a \( -name tests -o -name idle_test \) \) \
-          -o \( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \
-       \) -exec rm -rf '{}' + \
-    \
-    && find / -type d -name __pycache__ -prune -exec rm -rf {} \; \
-    && rm -rf /root/.cache /home/$USER/.cache
+RUN pip install --no-cache-dir --upgrade -r /builds/app/requirements.txt \
+    && rm -f /builds/app/requirements.txt
+
 
 ENTRYPOINT ["python", "Entry.py"]

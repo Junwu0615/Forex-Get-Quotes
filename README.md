@@ -92,17 +92,22 @@ TELEGRAM_CHAT_ID=<Your TELEGRAM_CHAT_ID>
 docker build -t forex-get-quotes:latest -f script/Dockerfile . --no-cache
 ```
 
-### *STEP.4　安裝 docker-compose*
+### *STEP.4　若無，創建網路*
+```bash
+docker network create --driver overlay open_network
+```
+
+### *STEP.5　安裝 docker-compose*
 ```bash
 docker stack deploy -c script/docker-compose.yaml forex-get-quotes
 ```
 
-### *STEP.5　檢視 docker service 清單*
+### *STEP.6　檢視 docker service 清單*
 ```bash
 docker service ls
 ```
 
-### *STEP.6　查看專案 log 打印*
+### *STEP.7　查看專案 log 打印*
 ```bash
 docker service logs -f forex-get-quotes_task
 ```
