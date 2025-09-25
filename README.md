@@ -85,6 +85,8 @@ SAVE_PATH=/builds/rep/datasets
 FMP_TOKEN=<Your FMP_TOKEN>
 TELEGRAM_BOT_TOKEN=<Your TELEGRAM_BOT_TOKEN>
 TELEGRAM_CHAT_ID=<Your TELEGRAM_CHAT_ID>
+TARGET_LIST=xauusd,eurusd,usdjpy,btcusd,ethusd
+INTERVAL_LIST=M1,M5,M15,H1,H4,D1
 ```
 
 ### *STEP.3　安裝 Dockerfile*

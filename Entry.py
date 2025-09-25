@@ -45,12 +45,16 @@ class Entry(Interface):
         base_path = os.environ.get('SAVE_PATH')
         os.makedirs(base_path, exist_ok=True)
 
-        target = ['xauusd']
-        # target = ['xauusd', 'eurusd', 'usdjpy', 'btcusd', 'ethusd']
-        interval_list = ['D1']
-        # interval_list = ['M1', 'M5', 'M15', 'H1', 'H4', 'D1']
+        # ['xauusd', 'eurusd', 'usdjpy', 'btcusd', 'ethusd']
+        target_list = os.environ.get('TARGET_LIST')
+        target_list = ['xauusd'] if target_list is None else target_list.split(',')
+
+        # ['M1', 'M5', 'M15', 'H1', 'H4', 'D1']
+        interval_list = os.environ.get('INTERVAL_LIST')
+        interval_list = ['D1'] if interval_list is None else interval_list.split(',')
+
         try:
-            for symbol in target:
+            for symbol in target_list:
                 os.makedirs(f'{base_path}/{symbol.upper()}', exist_ok=True)
                 for interval in interval_list:
                     self.logger.warning(f'[{MODULE_NAME}] Now: {symbol.upper()} [{interval}]')
@@ -58,7 +62,7 @@ class Entry(Interface):
 
             message = (f'[{MODULE_NAME} : save data in json and ms sql]\n'
                        f'    - Time : {str(get_now(hours=8, tzinfo=TZ_UTC_8))[:19]}\n'
-                       f'    - Target List : {[i.upper() for i in target]}')
+                       f'    - Target List : {[i.upper() for i in target_list]}')
 
             send_message(message,
                          logger=self.logger,
