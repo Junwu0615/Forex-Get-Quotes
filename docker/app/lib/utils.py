@@ -34,7 +34,7 @@ class UtilsLogic:
             json.dump(loader, open(_save_f_name, 'w'))
 
         except Exception as e:
-            self.logger.error(exc_info=True)
+            self.logger.error()
 
 
     def save_db(self, loader: list, symbol: str, interval: str):
@@ -57,7 +57,7 @@ class UtilsLogic:
                             TForexQuotesField.VOLUME.value: trans_decimal(i['volume'], '0.01'),
                         }
                     except Exception as e:
-                        self.logger.error('', exc_info=True)
+                        self.logger.error()
 
             elif isinstance(loader, dict):
                 for i in loader['historical']:
@@ -75,7 +75,7 @@ class UtilsLogic:
                             TForexQuotesField.VOLUME.value: trans_decimal(i['volume'], '0.01'),
                         }
                     except Exception as e:
-                        self.logger.error('', exc_info=True)
+                        self.logger.error()
 
             else:
                 raise ValueError('loader type error')
@@ -85,4 +85,4 @@ class UtilsLogic:
                                 save_data=datum)
 
         except Exception as e:
-            self.logger.error(exc_info=True)
+            self.logger.error()

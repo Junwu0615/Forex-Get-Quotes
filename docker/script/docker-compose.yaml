@@ -28,7 +28,8 @@ services:
     networks:
       - open_network
     volumes:
-      - ../../:/builds/rep
+      - ../../datasets:/builds/rep/datasets
+      - ../../log:/builds/rep/log
 
 networks:
   open_network:

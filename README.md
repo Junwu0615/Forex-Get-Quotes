@@ -70,6 +70,7 @@ Forex-Get-Quotes/docker
 
 ### *STEP.1　創建檔案夾 & 進入腳本路徑*
 ```bash
+md log;
 md datasets;
 cd docker
 ```
@@ -82,6 +83,7 @@ SQL_SERVER_LOGIN_USER=<Your User Name>
 SQL_SERVER_LOGIN_PASSWORD=<Your User Password>
 SCHEDULE_SETTINGS=MTWTFss=22:00:00,MTWTFss=10:00:00 # Linux 時間計算為+0
 SAVE_PATH=/builds/rep/datasets
+LOG_PATH=/builds/rep/log
 FMP_TOKEN=<Your FMP_TOKEN>
 TELEGRAM_BOT_TOKEN=<Your TELEGRAM_BOT_TOKEN>
 TELEGRAM_CHAT_ID=<Your TELEGRAM_CHAT_ID>

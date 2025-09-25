@@ -81,7 +81,8 @@ class Entry(Interface):
 
 if __name__ == "__main__":
     logger = Logger(console_name=f'.{__name__}_console',
-                    file_name=f'.{__name__}')
+                    file_name=f'.{__name__}',
+                    use_docker=os.environ.get('LOG_PATH'))
 
     logger.info(logger.title_log(f'[{__name__}] 主程式啟動'))
 
