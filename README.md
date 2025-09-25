@@ -10,12 +10,14 @@
 
 ## *A.　Update Plan*
 | 事件 | 敘述 | 更新時間 |
-|:----:|----|:----:|
+|:--:|--|:--:|
 | 專案上架 | Forex-Get-Quotes | 2024-09-12 |
 | 加入排程邏輯 | 自動化抓取數據 | 2024-09-12 |
 | 與 Database 串接 | 用 [Database-Template](https://github.com/Junwu0615/Database-Template) 完成該功能 | 2024-12-29 |
 | Docker | 包裝成服務 | 2025-01-24 |
 | 更新 README 說明 | Docker & Database 連線問題 | 2025-01-24 |
+| 更新撰寫方式 | - | 2025-09-25 |
+| 更新專案路徑編排 | - | 2025-09-25 |
 
 <br>
 
@@ -32,13 +34,8 @@ pip install -r requirements.txt
 ```
 
 ### *STEP.3　Notice*
-- #### 將 package `token_.txt` -> `token.txt` 修改內容
-    ```
-    LINE,[Fill In Your LINE Token]
-    FMP,[Fill In Your FMP Token]
-    TELEGRAM,[Fill In Your Bot Token],[Fill In Your Chat Token]
-    ```
-- #### 有引用 [Database-Template](https://github.com/Junwu0615/Database-Template) 功能完成餵入Database的動作
+- #### *記得填寫 .env 或是在 IDE 設定參數 # 可參考下面的描述*
+- #### *有引用 [Database-Template](https://github.com/Junwu0615/Database-Template) 功能完成餵入 Database 的動作*
 
 ### *STEP.4　Run*
 ```py
@@ -79,12 +76,15 @@ cd docker
 
 ### *STEP.2　新增檔案 : `./script/.env`*
 ```commandline
-SQL_SERVICE_DRIVER=17
-SQL_SERVICE_BROKER_HOST=<Your SQL Server IP>,<YOUR SQL Server Port>
-SQL_SERVICE_LOGIN_USER=<Your User Name>
-SQL_SERVICE_LOGIN_PASSWORD=<Your User Password>
+SQL_SERVER_DRIVER=17
+SQL_SERVER_BROKER_HOST=<Your SQL Server IP>,<YOUR SQL Server Port>
+SQL_SERVER_LOGIN_USER=<Your User Name>
+SQL_SERVER_LOGIN_PASSWORD=<Your User Password>
 SCHEDULE_SETTINGS=MTWTFss=22:00:00,MTWTFss=10:00:00 # Linux 時間計算為+0
 SAVE_PATH=/builds/rep/datasets
+FMP_TOKEN=<Your FMP_TOKEN>
+TELEGRAM_BOT_TOKEN=<Your TELEGRAM_BOT_TOKEN>
+TELEGRAM_CHAT_ID=<Your TELEGRAM_CHAT_ID>
 ```
 
 ### *STEP.3　安裝 Dockerfile*
@@ -111,6 +111,8 @@ docker service logs -f forex-get-quotes_task
 
 <br>
 
+
+## *D.　Other*
 ### *新增 SQL 用戶來登入 Database*
 - #### *確認使用者是否存在*
   ```sql
@@ -238,7 +240,7 @@ docker service logs -f forex-get-quotes_task
 
 <br>
 
-## *D.　Data & Reference Sources*
+## *E.　Data & Reference Sources*
 - #### [Financial Modeling Prep](https://financialmodelingprep.com/developer/docs/)
 - #### [找不到 SQL Server 配置管理器](https://blog.csdn.net/czjnoe/article/details/136991382)
 - #### [SQL Server TCP/IP 设置](https://blog.csdn.net/kfepiza/article/details/131266987)

@@ -10,16 +10,16 @@ FIXME   -參數
             PYTHONUNBUFFERED=1
             SAVE_PATH=./data
             SCHEDULE_SETTINGS=MTWTFss=06:00:00,MTWTFss=18:00:00
-            SQL_SERVICE_BROKER_HOST=<ip,port>
-            SQL_SERVICE_LOGIN_PASSWORD=<password>
-            SQL_SERVICE_LOGIN_USER=<user>
+            SQL_SERVER_BROKER_HOST=<ip,port>
+            SQL_SERVER_LOGIN_PASSWORD=<password>
+            SQL_SERVER_LOGIN_USER=<user>
 """
 import os
 from datetime import datetime
 
 from package.base import BaseLogic
 from package.token import TokenSettings
-from developer.package.norm_function import DATE_YMD_ONE
+from developer.package.norm_function import SHORT_FORMAT
 from developer.package.interface import Interface
 from developer.definition.state import State
 

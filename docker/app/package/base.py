@@ -4,7 +4,7 @@ from datetime import datetime
 
 from package.source import GetSource
 from package.token import TokenSettings
-from developer.package.norm_function import DATE_YMD_ONE, DATE_YMD_3TH
+from developer.package.norm_function import SHORT_FORMAT, LONG_FORMAT
 from developer.model.TForexQuotes import TForexQuotesField, TForexQuotesFormat
 
 class BaseLogic:
@@ -42,7 +42,7 @@ class BaseLogic:
             if isinstance(loader, list):
                 for i in loader:
                     try:
-                        timestamp = datetime.strptime(i['date'], DATE_YMD_3TH).timestamp()
+                        timestamp = datetime.strptime(i['date'], LONG_FORMAT).timestamp()
                         date = self.obj.trans_timestamp(timestamp, 46800)
                         key = f"{str(date)[:19]}_{symbol}_{interval}"
                         datum[key] = {
@@ -61,7 +61,7 @@ class BaseLogic:
             elif isinstance(loader, dict):
                 for i in loader['historical']:
                     try:
-                        date = self.obj.trans_datetime(i['date'], DATE_YMD_ONE)
+                        date = self.obj.trans_datetime(i['date'], SHORT_FORMAT)
                         key = f"{str(date)[:19]}_{symbol}_{interval}"
                         datum[key] = {
                             TForexQuotesField.CREATEDATETIME.value: date,
