@@ -26,17 +26,26 @@ class UtilsLogic:
         return fmp_resource[key]
 
 
-    def save_data(self, base_path: str, symbol: str, interval: str):
+    def save_data(self, base_path: str, symbol: str, interval: str) -> tuple[bool, bool]:
+        ret_1, ret_2 = False, False
         try:
             os.makedirs(f'{base_path}/{symbol.upper()}/{interval}', exist_ok=True)
-            res = requests.get(self.fmp(symbol, interval, self.obj.fmp))
+
+            res = requests.get(self.fmp(symbol, interval, self.obj.fmp_token))
             loader = json.loads(res.text)
+
             self.save_db(loader, symbol.upper(), interval)
+            ret_1 = True
+
             _save_f_name = f'{base_path}/{symbol.upper()}/{interval}/{symbol}_{str(datetime.now())[:10]}.json'
             json.dump(loader, open(_save_f_name, 'w'))
+            ret_2 = True
 
         except Exception as e:
             self.logger.error()
+
+        finally:
+            return ret_1, ret_2
 
 
     def save_db(self, loader: list, symbol: str, interval: str):

@@ -30,7 +30,7 @@ class Entry(Interface):
             raise Exception('Logger 未設定，請先於 __main__ 中定義')
 
         self.logger = logger
-        self.fmp = os.environ.get('FMP_TOKEN')
+        self.fmp_token = os.environ.get('FMP_TOKEN')
         self.base = UtilsLogic(self, logger)
         super().__init__(do_time, logger)
 
@@ -54,15 +54,19 @@ class Entry(Interface):
         interval_list = ['D1'] if interval_list is None else interval_list.split(',')
 
         try:
+            ret_1, ret_2 = False, False
+
             for symbol in target_list:
                 os.makedirs(f'{base_path}/{symbol.upper()}', exist_ok=True)
                 for interval in interval_list:
                     self.logger.warning(f'[{MODULE_NAME}] Now: {symbol.upper()} [{interval}]')
-                    self.base.save_data(base_path, symbol, interval)
+                    ret_1, ret_2 = self.base.save_data(base_path, symbol, interval)
 
-            message = (f'[{MODULE_NAME} : save data in json and ms sql]\n'
+            message = (f'[{MODULE_NAME} : Forex-Get-Quotes]\n'
                        f'    - Time : {str(get_now(hours=8, tzinfo=TZ_UTC_8))[:19]}\n'
-                       f'    - Target List : {[i.upper() for i in target_list]}')
+                       f'    - Target List : {[i.upper() for i in target_list]}\n'
+                       f'    - MS SQL : {'✅' if ret_2 else '⛔'}\n'
+                       f'    - Json File : {'✅' if ret_1 else '⛔'}')
 
             send_message(message,
                          logger=self.logger,
