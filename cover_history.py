@@ -1,21 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 @author: PC
-        -目的: 欲使 <模擬交易> 可有使用之數據
-        -功能: 鎖定 XAUUSD ...等商品，並儲存 M1 M5 M15 H1 H4 D1 數個 Interval
-        -訊息通知: Telegram / line: 2025-03-31 停止服務
-        -用 Docker 佈署並依給定排程運行
-FIXME   -參數
-            PYTHONUNBUFFERED=1
-            SAVE_PATH=./data
-            SCHEDULE_SETTINGS=MTWTFss=06:00:00,MTWTFss=18:00:00
-            SQL_SERVER_BROKER_HOST=<ip,port>
-            SQL_SERVER_LOGIN_PASSWORD=<password>
-            SQL_SERVER_LOGIN_USER=<user>
+        -目的: 回補歷史數據
 """
 from lib.utils import UtilsLogic
 from developer.utils.normal import *
-from developer.utils.telegram import *
 from developer.modules.logger import Logger
 from developer.modules.interface import Interface
 from developer.modules.models.WorkStatus import Status
@@ -64,11 +53,6 @@ class Entry(Interface):
                        f'    - Time : {str(get_now(hours=8, tzinfo=TZ_UTC_8))[:19]}\n'
                        f'    - Target List : {[i.upper() for i in target_list]}')
 
-            send_message(message,
-                         logger=self.logger,
-                         bot_token=os.environ.get('TELEGRAM_BOT_TOKEN'),
-                         chat_id=os.environ.get('TELEGRAM_CHAT_ID'))
-
             self.logger.warning(f'[{MODULE_NAME}] {message}')
             ret = Status.OK
 
@@ -80,13 +64,9 @@ class Entry(Interface):
 
 
 if __name__ == "__main__":
-    logger = Logger(console_name=f'.{__name__}_console',
-                    file_name=f'.{__name__}',
+    logger = Logger(console_name=f'.cover_history_console',
+                    file_name=f'.cover_history',
                     use_docker=os.environ.get('LOG_PATH'))
 
     logger.info(logger.title_log(f'[{__name__}] 主程式啟動'))
-
-    do_time = os.environ.get('SCHEDULE_SETTINGS')
-    do_time = ['MTWTFss=06:00:00', 'MTWTFss=18:00:00'] \
-        if do_time is None else do_time.split(',')
-    entry = Entry(do_time, logger)
+    entry = Entry(None, logger)

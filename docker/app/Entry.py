@@ -69,7 +69,7 @@ class Entry(Interface):
                          bot_token=os.environ.get('TELEGRAM_BOT_TOKEN'),
                          chat_id=os.environ.get('TELEGRAM_CHAT_ID'))
 
-            self.logger.warning(f'[{MODULE_NAME}] {send_message}')
+            self.logger.warning(f'[{MODULE_NAME}] {message}')
             ret = Status.OK
 
         except Exception as e:
