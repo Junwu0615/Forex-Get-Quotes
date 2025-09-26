@@ -19,8 +19,6 @@ class Entry(Interface):
             raise Exception('Logger 未設定，請先於 __main__ 中定義')
 
         self.logger = logger
-        self.fmp = os.environ.get('FMP_TOKEN')
-        self.base = UtilsLogic(self, logger)
         super().__init__(do_time, logger)
 
 
@@ -34,22 +32,23 @@ class Entry(Interface):
         base_path = os.environ.get('SAVE_PATH')
         os.makedirs(base_path, exist_ok=True)
 
-        # ['xauusd', 'eurusd', 'usdjpy', 'btcusd', 'ethusd']
         target_list = os.environ.get('TARGET_LIST')
-        target_list = ['xauusd'] if target_list is None else target_list.split(',')
+        target_list = ['xauusd', 'eurusd', 'usdjpy', 'btcusd', 'ethusd'] \
+            if target_list is None else target_list.split(',')
 
-        # ['M1', 'M5', 'M15', 'H1', 'H4', 'D1']
         interval_list = os.environ.get('INTERVAL_LIST')
-        interval_list = ['D1'] if interval_list is None else interval_list.split(',')
+        interval_list = ['M1', 'M5', 'M15', 'H1', 'H4', 'D1'] \
+            if interval_list is None else interval_list.split(',')
 
         try:
+            # TODO 未實作
             for symbol in target_list:
                 os.makedirs(f'{base_path}/{symbol.upper()}', exist_ok=True)
                 for interval in interval_list:
                     self.logger.warning(f'[{MODULE_NAME}] Now: {symbol.upper()} [{interval}]')
                     self.base.save_data(base_path, symbol, interval)
 
-            message = (f'[{MODULE_NAME} : save data in json and ms sql]\n'
+            message = (f'[{MODULE_NAME} : Forex-Get-Quotes # History]\n'
                        f'    - Time : {str(get_now(hours=8, tzinfo=TZ_UTC_8))[:19]}\n'
                        f'    - Target List : {[i.upper() for i in target_list]}')
 

@@ -55,7 +55,7 @@ class UtilsLogic:
                 for i in loader:
                     try:
                         timestamp = datetime.strptime(i['date'], LONG_FORMAT).timestamp()
-                        date = trans_timestamp(timestamp, 46800)
+                        date = trans_timestamp(timestamp, 43200) # 43200 # 46800
                         key = f"{str(date)[:19]}_{symbol}_{interval}"
                         datum[key] = {
                             TForexQuotesField.CREATEDATETIME.value: date,
